@@ -4,6 +4,7 @@ import { Container, Form, Row, Col, Button } from "react-bootstrap";
 
 const Scheduler = () => {
   const [users, setUsers] = useState([]);
+  const [allDay, setAllday] = useState(false);
 
   useEffect(() => {
     axios
@@ -11,6 +12,10 @@ const Scheduler = () => {
       .then((res) => setUsers(res.data))
       .catch((err) => console.log(err));
   }, [users.length]);
+
+  const handleAllDay = (e) => {
+    setAllday(e.target.checked);
+  };
 
   return (
     <Container className="mt-3">
@@ -27,7 +32,7 @@ const Scheduler = () => {
                     >{`${res.first_name} ${res.last_name}`}</option>
                   ))
                 ) : (
-                  <option disabled>Please add Employees</option>
+                  <option disabled>Please add employees</option>
                 )}
               </Form.Control>
               <Form.Text muted>To select multiple hold CTRL</Form.Text>
@@ -38,7 +43,7 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>Start Date</Form.Label>
-                  <Form.Control type="date" />
+                  <Form.Control type="date" required />
                 </Form.Group>
               </Col>
             </Row>
@@ -46,7 +51,7 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>Start Time</Form.Label>
-                  <Form.Control type="time" />
+                  <Form.Control type="time" disabled={allDay} />
                 </Form.Group>
               </Col>
             </Row>
@@ -64,15 +69,28 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>End Time</Form.Label>
-                  <Form.Control type="time" />
+                  <Form.Control type="time" disabled={allDay} />
                 </Form.Group>
               </Col>
             </Row>
           </Col>
         </Row>
-        <Button className="mt-3" variant="secondary">
-          Add Schedule
-        </Button>
+        <Row className="justify-content-end">
+          <Col className="text-start">
+            <Form.Group>
+              <Form.Check
+                type="checkbox"
+                label="All Day"
+                onClick={handleAllDay}
+              />
+            </Form.Group>
+          </Col>
+          <Col className="text-end">
+            <Button className="mt-3" variant="secondary">
+              Add Schedule
+            </Button>
+          </Col>
+        </Row>
       </Form>
     </Container>
   );
