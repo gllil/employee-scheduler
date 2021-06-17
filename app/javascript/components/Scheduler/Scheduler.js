@@ -13,13 +13,19 @@ const Scheduler = () => {
       .catch((err) => console.log(err));
   }, [users.length]);
 
-  const handleAllDay = (e) => {
-    setAllday(e.target.checked);
+  console.log(users);
+
+  // const handleAllDay = (e) => {
+  //   setAllday(e.target.checked);
+  // };
+
+  const handleSchedulerForm = (e) => {
+    console.log(e.target.value);
   };
 
   return (
     <Container className="mt-3">
-      <Form>
+      <Form onChange={handleSchedulerForm}>
         <Row>
           <Col>
             <Form.Group>
@@ -76,7 +82,7 @@ const Scheduler = () => {
           </Col>
         </Row>
         <Row className="justify-content-end">
-          <Col className="text-start">
+          {/* <Col className="text-start">
             <Form.Group>
               <Form.Check
                 type="checkbox"
@@ -84,7 +90,7 @@ const Scheduler = () => {
                 onClick={handleAllDay}
               />
             </Form.Group>
-          </Col>
+          </Col> */}
           <Col className="text-end">
             <Button className="mt-3" variant="secondary">
               Add Schedule
