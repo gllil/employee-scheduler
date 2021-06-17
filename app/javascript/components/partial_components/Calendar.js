@@ -5,12 +5,8 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 
 const Calendar = () => {
-  const [fullName, setFullname] = useState(null);
   const [events, setEvents] = useState([]);
-  const [eventsLength, setEventsLength] = useState(null);
   const [mountCalendar, setMountCalendar] = useState(false);
-  const [usersReady, setUsersReady] = useState(false);
-  const [eventsReady, setEventsReady] = useState(false);
 
   const convertHour = (hour, ampm) => {
     if (hour <= 12 && ampm === "pm") {
@@ -47,7 +43,6 @@ const Calendar = () => {
       })
       .then((users) => {
         axios.get("/workdays").then((workdays) => {
-          setEventsLength(workdays.data.length);
           workdays.data.map((workday) => {
             let selectedUser =
               users && users.filter((user) => user.id === workday.user_id);

@@ -5,6 +5,7 @@ import { Container, Form, Row, Col, Button } from "react-bootstrap";
 const Scheduler = () => {
   const [users, setUsers] = useState([]);
   const [allDay, setAllday] = useState(false);
+  const [schedulerForm, setSchedulerForm] = useState({});
 
   useEffect(() => {
     axios
@@ -20,7 +21,8 @@ const Scheduler = () => {
   // };
 
   const handleSchedulerForm = (e) => {
-    console.log(e.target.value);
+    const { name, value } = e.target;
+    setSchedulerForm({ ...schedulerForm, [name]: value });
   };
 
   return (
@@ -30,7 +32,7 @@ const Scheduler = () => {
           <Col>
             <Form.Group>
               <Form.Label>Select Name(s)</Form.Label>
-              <Form.Control as="select" multiple required>
+              <Form.Control name="names" as="select" multiple required>
                 {users.length ? (
                   users.map((res) => (
                     <option
@@ -49,7 +51,7 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>Start Date</Form.Label>
-                  <Form.Control type="date" required />
+                  <Form.Control name="start_date" type="date" required />
                 </Form.Group>
               </Col>
             </Row>
@@ -57,7 +59,11 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>Start Time</Form.Label>
-                  <Form.Control type="time" disabled={allDay} />
+                  <Form.Control
+                    name="start_time"
+                    type="time"
+                    disabled={allDay}
+                  />
                 </Form.Group>
               </Col>
             </Row>
@@ -67,7 +73,7 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>End Date</Form.Label>
-                  <Form.Control type="date" />
+                  <Form.Control name="end_date" type="date" />
                 </Form.Group>
               </Col>
             </Row>
@@ -75,7 +81,7 @@ const Scheduler = () => {
               <Col>
                 <Form.Group>
                   <Form.Label>End Time</Form.Label>
-                  <Form.Control type="time" disabled={allDay} />
+                  <Form.Control name="end_time" type="time" disabled={allDay} />
                 </Form.Group>
               </Col>
             </Row>
@@ -92,7 +98,7 @@ const Scheduler = () => {
             </Form.Group>
           </Col> */}
           <Col className="text-end">
-            <Button className="mt-3" variant="secondary">
+            <Button type="submit" className="mt-3" variant="secondary">
               Add Schedule
             </Button>
           </Col>
