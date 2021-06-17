@@ -89,8 +89,7 @@ const Calendar = () => {
           plugins={[dayGridPlugin, timeGridPlugin]}
           initialView="dayGridMonth"
           events={events}
-          selectable
-          editable
+          dayMaxEvents={true}
           headerToolbar={{
             left: "prev, next, today",
             center: "title",
