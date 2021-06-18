@@ -9,7 +9,7 @@ const Scheduler = () => {
 
   useEffect(() => {
     axios
-      .get("/users")
+      .get("https://employee-scheduler-backend.herokuapp.com/users")
       .then((res) => setUsers(res.data))
       .catch((err) => console.log(err));
   }, [users.length]);
