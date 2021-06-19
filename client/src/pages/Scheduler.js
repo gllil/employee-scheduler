@@ -22,9 +22,55 @@ const Scheduler = () => {
       .catch((err) => console.log(err));
   }, [users.length]);
 
-  const handleSchedulerForm = (e) => {
+  const handleSchedulerForm = (e, index) => {
     const { name, value } = e.target;
-    setSchedulerForm({ ...schedulerForm, [name]: value });
+    const updatedForm = schedulerForm.map((schedule, i) => {
+      if (
+        value === "00" ||
+        value === "1" ||
+        value === "2" ||
+        value === "3" ||
+        value === "4" ||
+        value === "5" ||
+        value === "6" ||
+        value === "7" ||
+        value === "8" ||
+        value === "9" ||
+        value === "10" ||
+        value === "11" ||
+        value === "12" ||
+        value === "15" ||
+        value === "30" ||
+        value === "45"
+      ) {
+        return {
+          ...schedule,
+          [name]: parseInt(value),
+        };
+      } else if (i !== index) {
+        return schedule;
+      } else {
+        return {
+          ...schedule,
+          [name]: value,
+        };
+      }
+    });
+    setSchedulerForm(updatedForm);
+  };
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault();
+    axios
+      .post(
+        "https://employee-scheduler-backend.herokuapp.com/workdays",
+        schedulerForm
+      )
+      .then((res) => {
+        console.log(res);
+        setSchedulerForm([]);
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleSearchInput = (e) => {
@@ -33,14 +79,19 @@ const Scheduler = () => {
 
   const searchField = document.getElementById("search");
 
-  const addUserForm = (firstName, lastName) => {
+  const addUserForm = (firstName, lastName, id) => {
     setSchedulerForm([
       ...schedulerForm,
       {
+        user_id: id,
         name: `${firstName} ${lastName}`,
         date: "",
-        start_time: "",
-        end_time: "",
+        start_hour: "",
+        start_min: "",
+        start_am_or_pm: "",
+        end_hour: "",
+        end_min: "",
+        end_am_or_pm: "",
       },
     ]);
     setSearchInput("");
@@ -50,7 +101,7 @@ const Scheduler = () => {
   const deleteUser = (index) => {
     let form = [...schedulerForm];
     form.splice(index, 1);
-    console.log(form);
+
     setSchedulerForm(form);
   };
   console.log(schedulerForm);
@@ -87,7 +138,9 @@ const Scheduler = () => {
             filteredUsers.map((res) => (
               <ListGroup.Item
                 action
-                onClick={() => addUserForm(res.first_name, res.last_name)}
+                onClick={() =>
+                  addUserForm(res.first_name, res.last_name, res.id)
+                }
                 key={res.id}
               >
                 {res.first_name + " " + res.last_name}
@@ -112,15 +165,111 @@ const Scheduler = () => {
               </Col>
 
               <Col>
-                <Form.Group>
-                  <Form.Label>Start Time</Form.Label>
-                  <Form.Control name="start_time" type="time" required />
+                <Form.Label>Start Time</Form.Label>
+                <Form.Group className="row align-items-center">
+                  <Form.Control
+                    className="col"
+                    name="start_hour"
+                    as="select"
+                    required
+                    defaultValue="hour"
+                    custom
+                  >
+                    <option disabled>hour</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                  </Form.Control>
+                  :
+                  <Form.Control
+                    className="col"
+                    name="start_min"
+                    as="select"
+                    required
+                    defaultValue="min"
+                    custom
+                  >
+                    <option disabled>min</option>
+                    <option>00</option>
+                    <option>15</option>
+                    <option>30</option>
+                    <option>45</option>
+                  </Form.Control>
+                  <Form.Control
+                    className="col"
+                    name="start_am_or_pm"
+                    as="select"
+                    required
+                    custom
+                    defaultValue="am or pm"
+                  >
+                    <option disabled>am or pm</option>
+                    <option>am</option>
+                    <option>pm</option>
+                  </Form.Control>
                 </Form.Group>
               </Col>
-              <Col>
-                <Form.Group>
-                  <Form.Label>End Time</Form.Label>
-                  <Form.Control name="end_time" type="time" required />
+              <Col className="ml-2">
+                <Form.Label>End Time</Form.Label>
+                <Form.Group className="row align-items-center">
+                  <Form.Control
+                    className="col"
+                    name="end_hour"
+                    as="select"
+                    required
+                    defaultValue="hour"
+                    custom
+                  >
+                    <option disabled>hour</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                  </Form.Control>
+                  :
+                  <Form.Control
+                    className="col"
+                    name="end_min"
+                    as="select"
+                    required
+                    defaultValue="min"
+                    custom
+                  >
+                    <option disabled>min</option>
+                    <option>00</option>
+                    <option>15</option>
+                    <option>30</option>
+                    <option>45</option>
+                  </Form.Control>
+                  <Form.Control
+                    className="col"
+                    name="end_am_or_pm"
+                    as="select"
+                    required
+                    custom
+                    defaultValue="am or pm"
+                  >
+                    <option disabled>am or pm</option>
+                    <option>am</option>
+                    <option>pm</option>
+                  </Form.Control>
                 </Form.Group>
               </Col>
               <Row className="align-items-center">
@@ -128,7 +277,7 @@ const Scheduler = () => {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="removeFormBtn"
+                    className="removeFormBtn ml-2"
                     onClick={() => deleteUser(i)}
                   >
                     Remove
@@ -143,7 +292,11 @@ const Scheduler = () => {
       {schedulerForm.length ? (
         <Row>
           <Col className="text-end">
-            <Button className="mt-3" variant="secondary">
+            <Button
+              className="mt-3"
+              variant="secondary"
+              onClick={handleSubmitForm}
+            >
               Add Schedules
             </Button>
           </Col>

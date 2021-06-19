@@ -26,16 +26,15 @@ const Calendar = () => {
     }
   };
 
-  const adjustDateTime = (date, hour, min, ampm) => {
-    let partDate = date;
-    let time = `${convertHour(hour, ampm)}:${convertMinute(min)}:00`;
-    let fullDate = `${partDate}T${time}`;
-
-    return fullDate;
-  };
-
   useEffect(() => {
     let eventList = [];
+    const adjustDateTime = (date, hour, min, ampm) => {
+      let partDate = date;
+      let time = `${convertHour(hour, ampm)}:${convertMinute(min)}:00`;
+      let fullDate = `${partDate}T${time}`;
+
+      return fullDate;
+    };
     axios
       .get("https://employee-scheduler-backend.herokuapp.com/users")
       .then((res) => {
@@ -45,7 +44,7 @@ const Calendar = () => {
         axios
           .get("https://employee-scheduler-backend.herokuapp.com/workdays")
           .then((workdays) => {
-            workdays.data.map((workday) => {
+            workdays.data.forEach((workday) => {
               let selectedUser =
                 users && users.filter((user) => user.id === workday.user_id);
               if (selectedUser[0].first_name && selectedUser[0].last_name) {
