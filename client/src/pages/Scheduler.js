@@ -14,6 +14,7 @@ const Scheduler = () => {
   const [users, setUsers] = useState([]);
   const [schedulerForm, setSchedulerForm] = useState([]);
   const [searchInput, setSearchInput] = useState("");
+  const [fullName, setFullName] = useState([]);
 
   useEffect(() => {
     axios
@@ -61,6 +62,7 @@ const Scheduler = () => {
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     axios
       .post(
         "https://employee-scheduler-backend.herokuapp.com/workdays",
@@ -80,11 +82,17 @@ const Scheduler = () => {
   const searchField = document.getElementById("search");
 
   const addUserForm = (firstName, lastName, id) => {
+    setFullName([
+      ...fullName,
+      {
+        name: `${firstName} ${lastName}`,
+        user_id: id,
+      },
+    ]);
     setSchedulerForm([
       ...schedulerForm,
       {
         user_id: id,
-        name: `${firstName} ${lastName}`,
         date: "",
         start_hour: "",
         start_min: "",
@@ -155,7 +163,7 @@ const Scheduler = () => {
             onChange={(e) => handleSchedulerForm(e, i)}
             key={i}
           >
-            <strong className="ml-5">{newForm.name}</strong>
+            <strong className="ml-5">{fullName[i].name}</strong>
             <Row>
               <Col>
                 <Form.Group>
@@ -276,8 +284,8 @@ const Scheduler = () => {
                 <Col>
                   <Button
                     size="sm"
-                    variant="secondary"
-                    className="removeFormBtn ml-2"
+                    variant="outline-danger"
+                    className="ml-4"
                     onClick={() => deleteUser(i)}
                   >
                     Remove

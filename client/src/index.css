@@ -11,10 +11,3 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-
-.removeFormBtn {
-  background-color: #9e0d08;
-}
-.removeFormBtn:hover {
-  color: rgb(243, 88, 88);
-}

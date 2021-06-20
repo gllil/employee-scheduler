@@ -1212,6 +1212,14 @@
     "@fullcalendar/common" "~5.8.0"
     tslib "^2.1.0"
 
+"@fullcalendar/interaction@^5.8.0":
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-5.8.0.tgz#1661682f4df7b076b36fedf2fc9b33a03f04bf07"
+  integrity sha512-ocOCS5g1AT06uR3OeKpN2WKJO4BLmnUZn/v2H/iPllbC7MwYBSy/obC4CoQqnK93FyJXUOFH1KfLwTK013C1+w==
+  dependencies:
+    "@fullcalendar/common" "~5.8.0"
+    tslib "^2.1.0"
+
 "@fullcalendar/react@^5.8.0":
   version "5.8.0"
   resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-5.8.0.tgz#4e5dbcb48b82db61b359de9f0b6e6a49483ace91"
