@@ -141,7 +141,6 @@ const Calendar = () => {
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="dayGridMonth"
           events={events}
-          ev
           dayMaxEvents={true}
           dateClick={function (info) {
             setCalendarDate(info.dateStr);
