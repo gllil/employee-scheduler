@@ -4,13 +4,15 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { Modal, Table } from "react-bootstrap";
+import { Modal, Table, Form, Col, Row, Button } from "react-bootstrap";
 
 const Calendar = () => {
   const [events, setEvents] = useState([]);
   const [mountCalendar, setMountCalendar] = useState(false);
   const [calendarDate, setCalendarDate] = useState("");
   const [openEventModal, setOpenEventModal] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [userId, setUserId] = useState("");
 
   const convertTo24Hour = (hour, ampm) => {
     if (hour <= 12 && ampm === "pm") {
@@ -21,7 +23,7 @@ const Calendar = () => {
       return hour.toString();
     }
   };
-  const convertTo12Hour = (time) => {
+  const convertTo12HourFull = (time) => {
     let hour = parseInt(time[0]);
     let min = time[1];
     let ampm = "";
@@ -40,6 +42,34 @@ const Calendar = () => {
       ampm = "am";
     }
     return hour + ":" + min + ampm;
+  };
+  const convertTo12Hour = (time) => {
+    let hour = parseInt(time);
+    if (hour > 12) {
+      let convertedHour = hour - 12;
+      hour = convertedHour.toString();
+    } else if (hour < 12) {
+      hour = hour.toString();
+    } else if (hour === 12) {
+      hour = hour.toString();
+    } else if (hour === 0 || hour === 24) {
+      hour = "12";
+    }
+    return hour;
+  };
+  const findAmOrPm = (time) => {
+    let hour = parseInt(time);
+    let ampm = "";
+    if (hour > 12) {
+      ampm = "pm";
+    } else if (hour < 12) {
+      ampm = "am";
+    } else if (hour === 12) {
+      ampm = "pm";
+    } else if (hour === 0 || hour === 24) {
+      ampm = "am";
+    }
+    return ampm;
   };
 
   const convertMinute = (min) => {
@@ -76,8 +106,25 @@ const Calendar = () => {
     return eventsDate;
   };
 
+  const pickUserAndDate = (eventsList, selectedDate, userId) => {
+    let eventsDateAndUser = eventsList.filter(
+      (e) => splitDateFromTime(e.start) === selectedDate && e.id === userId
+    );
+    return eventsDateAndUser;
+  };
+
   const handleModalClose = () => {
     setOpenEventModal(false);
+    setEdit(false);
+  };
+
+  const editSchedule = (userId) => {
+    setUserId(userId);
+    setEdit(true);
+  };
+
+  const handleSchedulerForm = (e) => {
+    console.log(e.currentTarget.value);
   };
 
   useEffect(() => {
@@ -160,24 +207,159 @@ const Calendar = () => {
           <Modal.Title>{convertDate(calendarDate)}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Table hover striped bordered>
-            <thead>
-              <tr>
-                <th>Employee</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {pickDate(events, calendarDate).map((res) => (
-                <tr key={res.id}>
-                  <th>{res.title}</th>
-                  <th>{convertTo12Hour(splitTimeFromDate(res.start))}</th>
-                  <th>{convertTo12Hour(splitTimeFromDate(res.end))}</th>
+          {edit ? (
+            pickUserAndDate(events, calendarDate, userId).map((res) => (
+              <Form
+                className="mt-3"
+                onChange={(e) => handleSchedulerForm(e)}
+                key={res.id}
+              >
+                <strong className="ml-5">{res.title}</strong>
+                <Row>
+                  <Col>
+                    <Form.Group>
+                      <Form.Label>Date</Form.Label>
+                      <Form.Control
+                        name="date"
+                        type="date"
+                        required
+                        defaultValue={splitDateFromTime(res.start)}
+                      />
+                    </Form.Group>
+                  </Col>
+                  <Col>
+                    <Form.Label>Start Time</Form.Label>
+                    <Form.Group className="row align-items-center">
+                      <Form.Control
+                        className="col"
+                        name="start_hour"
+                        as="select"
+                        required
+                        defaultValue={convertTo12Hour(
+                          splitTimeFromDate(res.start)[0]
+                        )}
+                        custom
+                      >
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                      </Form.Control>
+                      :
+                      <Form.Control
+                        className="col"
+                        name="start_min"
+                        as="select"
+                        required
+                        defaultValue={splitTimeFromDate(res.start)[1]}
+                        custom
+                      >
+                        <option>00</option>
+                        <option>15</option>
+                        <option>30</option>
+                        <option>45</option>
+                      </Form.Control>
+                      <Form.Control
+                        className="col"
+                        name="start_am_or_pm"
+                        as="select"
+                        required
+                        custom
+                        defaultValue={findAmOrPm(
+                          splitTimeFromDate(res.start)[0]
+                        )}
+                      >
+                        <option>am</option>
+                        <option>pm</option>
+                      </Form.Control>
+                    </Form.Group>
+                  </Col>
+                  <Col className="ml-2">
+                    <Form.Label>End Time</Form.Label>
+                    <Form.Group className="row align-items-center">
+                      <Form.Control
+                        className="col"
+                        name="end_hour"
+                        as="select"
+                        required
+                        defaultValue={convertTo12Hour(
+                          splitTimeFromDate(res.end)[0]
+                        )}
+                        custom
+                      >
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                      </Form.Control>
+                      :
+                      <Form.Control
+                        className="col"
+                        name="end_min"
+                        as="select"
+                        required
+                        defaultValue={splitTimeFromDate(res.end)[1]}
+                        custom
+                      >
+                        <option>00</option>
+                        <option>15</option>
+                        <option>30</option>
+                        <option>45</option>
+                      </Form.Control>
+                      <Form.Control
+                        className="col"
+                        name="end_am_or_pm"
+                        as="select"
+                        required
+                        custom
+                        defaultValue={findAmOrPm(splitTimeFromDate(res.end)[0])}
+                      >
+                        <option>am</option>
+                        <option>pm</option>
+                      </Form.Control>
+                    </Form.Group>
+                  </Col>
+                </Row>
+                <Button onClick={() => setEdit(false)}>Update</Button>
+                <Button onClick={() => setEdit(false)}>Cancel</Button>
+              </Form>
+            ))
+          ) : (
+            <Table hover striped bordered>
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
+              </thead>
+              <tbody>
+                {pickDate(events, calendarDate).map((res) => (
+                  <tr key={res.id} onClick={() => editSchedule(res.id)}>
+                    <th>{res.title}</th>
+                    <th>{convertTo12HourFull(splitTimeFromDate(res.start))}</th>
+                    <th>{convertTo12HourFull(splitTimeFromDate(res.end))}</th>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          )}
         </Modal.Body>
       </Modal>
     </>
