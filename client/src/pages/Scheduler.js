@@ -108,11 +108,13 @@ const Scheduler = () => {
 
   const deleteUser = (index) => {
     let form = [...schedulerForm];
+    let names = [...fullName];
     form.splice(index, 1);
+    names.splice(index, 1);
 
     setSchedulerForm(form);
+    setFullName(names);
   };
-  console.log(schedulerForm);
 
   let filteredUsers =
     users &&
@@ -159,6 +161,7 @@ const Scheduler = () => {
       <div className="mt-5">
         {schedulerForm.map((newForm, i) => (
           <Form
+            id="scheduler-form"
             className="mt-3"
             onChange={(e) => handleSchedulerForm(e, i)}
             key={i}

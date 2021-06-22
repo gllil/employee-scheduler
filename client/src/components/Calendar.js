@@ -116,6 +116,7 @@ const Calendar = () => {
   const handleModalClose = () => {
     setOpenEventModal(false);
     setEdit(false);
+    calendar.render();
   };
 
   const editSchedule = (userId) => {
@@ -126,6 +127,12 @@ const Calendar = () => {
   const handleSchedulerForm = (e) => {
     console.log(e.currentTarget.value);
   };
+
+  let calendarEl = document.getElementById("calendar");
+
+  let calendar = new FullCalendar(calendarEl, {
+    plugins: [dayGridPlugin],
+  });
 
   useEffect(() => {
     let eventList = [];
@@ -183,6 +190,7 @@ const Calendar = () => {
 
   return (
     <>
+      {console.log(<FullCalendar />)}
       {mountCalendar ? (
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
@@ -193,6 +201,7 @@ const Calendar = () => {
             setCalendarDate(info.dateStr);
             setOpenEventModal(true);
           }}
+          id="calendar"
           headerToolbar={{
             left: "dayGridMonth,timeGridWeek,timeGridDay",
             center: "title",
