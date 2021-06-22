@@ -63,16 +63,29 @@ const Scheduler = () => {
   const handleSubmitForm = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    axios
+    let formData = schedulerForm
+    formData.forEach((form) => {
+      axios
       .post(
-        "https://employee-scheduler-backend.herokuapp.com/workdays",
-        schedulerForm
+        "http://localhost:3000/workdays",
+        form
       )
       .then((res) => {
         console.log(res);
         setSchedulerForm([]);
       })
       .catch((err) => console.log(err));
+    })
+    // axios
+    //   .post(
+    //     "https://employee-scheduler-backend.herokuapp.com/workdays",
+    //     schedulerForm
+    //   )
+    //   .then((res) => {
+    //     console.log(res);
+    //     setSchedulerForm([]);
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   const handleSearchInput = (e) => {
